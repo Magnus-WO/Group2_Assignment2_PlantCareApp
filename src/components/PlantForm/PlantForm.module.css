@@ -1,0 +1,63 @@
+.plantFormContainer {
+  width: 100%;
+  height: auto;
+  background-color: var(--secondary-background-color);
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-large);
+  border-radius: var(--border-radius-medium);
+}
+
+.plantFormContainer .plantForm {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--spacing-large);
+  position: relative;
+}
+
+.plantForm .formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-small);
+  flex: 1 1 45%;
+  min-width: 200px;
+}
+
+.formGroup label {
+  font-size: var(--font-size-base);
+}
+
+.formGroup input {
+  height: 32px;
+  padding-left: var(--spacing-small);
+  border: none;
+  border-bottom: 1px solid var(--text-color);
+}
+.formGroup input:focus {
+  outline: none;
+  border-bottom: 2px solid forestgreen;
+}
+
+.plantForm .buttonContainer {
+  width: 100%;
+  display: flex;
+  gap: var(--spacing-small);
+  margin-top: var(--spacing-medium);
+}
+.plantForm .buttonContainer .formButton {
+  width: 100%;
+  background-color: var(--button-color);
+  color: var(--button-text-color);
+  padding: var(--spacing-small) var(--spacing-medium);
+  border-radius: var(--border-radius-medium);
+  border: none;
+  font-size: var(--font-size-base);
+  align-self: center;
+}
+.plantForm .buttonContainer .formButton:hover {
+    transition: 0.2s ease;
+  background-color: var(--hover-color);
+}
