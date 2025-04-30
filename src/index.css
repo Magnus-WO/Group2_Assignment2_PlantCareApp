@@ -19,6 +19,7 @@ button {
   --button-color: #3f6d46;
   --hover-color: #6c757d;
   --button-text-color: #efeff0;
+  --error-color: #ff0000;
 
   /* Spacing */
   --spacing-small: 0.5rem;
