@@ -8,6 +8,7 @@
   padding: var(--spacing-large);
   border-radius: var(--border-radius-medium);
   overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 .formTitle {
