@@ -1,11 +1,19 @@
 .plantFormContainer {
   width: 100%;
+  max-height: 650px;
   height: auto;
   background-color: var(--secondary-background-color);
   display: flex;
   flex-direction: column;
   padding: var(--spacing-large);
   border-radius: var(--border-radius-medium);
+  overflow-y: auto;
+}
+
+.formTitle {
+  width: 120px;
+  margin-bottom: var(--spacing-medium);
+  border-bottom: 1px solid var(--text-color);
 }
 
 .plantFormContainer .plantForm {
@@ -29,7 +37,6 @@
 .formGroup label {
   font-size: var(--font-size-base);
 }
-
 .formGroup input {
   height: 32px;
   padding-left: var(--spacing-small);
@@ -39,6 +46,24 @@
 .formGroup input:focus {
   outline: none;
   border-bottom: 2px solid forestgreen;
+}
+
+.formGroup .temperatureInputs {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: var(--spacing-small);
+}
+.temperatureInputs .temperatureInput {
+  width: 100%;
+  text-align: center;
+}
+.temperatureErrorContainer{
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  gap: var(--spacing-small);
 }
 
 .plantForm .buttonContainer {
@@ -58,6 +83,9 @@
   align-self: center;
 }
 .plantForm .buttonContainer .formButton:hover {
-    transition: 0.2s ease;
+  transition: 0.2s ease;
   background-color: var(--hover-color);
+}
+
+@media screen and (max-width: 768px) {
 }
