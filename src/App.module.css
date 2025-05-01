@@ -10,7 +10,6 @@
 .heroContainer {
   height: 100%;
   width: 100%;
-  background-color: white;
   display: flex;
   flex-direction: column;
   padding: var(--spacing-large);
@@ -20,10 +19,32 @@
   width: 100%;
   display: flex;
   align-items: center;
+  padding: var(--spacing-large) var(--spacing-small);
 }
 header .title {
   flex-grow: 1;
+  color: var(--secondary-background-color);
+  font-size: var(--font-size-xl);
+  font-weight: lighter;
 }
 header .openModalButton {
+  background-color: #f0f0f0;
+  color: var(--primary-background-color);
   width: 200px;
+  /* font-weight: bold; */
+  font-size: var(--font-size-base);
+}
+header .openModalButton:hover {
+  background-color: var(--button-color);
+  color: var(--button-text-color);
+}
+
+.heroContainer main {
+  background-color: var(--secondary-background-color);
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-large);
+  border-radius: var(--border-radius-medium);
 }
