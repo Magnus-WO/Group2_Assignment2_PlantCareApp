@@ -1,7 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../Button/Button";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import styles from "./PlantForm.module.css";
+import { database } from "../../firebaseConfig";
+import {
+  collection,
+  getDocs,
+  doc,
+  addDoc,
+  deleteDoc,
+} from "firebase/firestore";
 
 const PlantForm = ({ closeModal }) => {
   // State variables
@@ -115,6 +123,19 @@ const PlantForm = ({ closeModal }) => {
     handleValidation();
   };
 
+  // Adding data to databse
+  const storeToFirebase = async (formData) => {
+    try {
+      const docRef = await addDoc(
+        collection(database, "plantGuidences"),
+        formData
+      );
+      console.log(`Data has been added to database with id ${docRef.id}`);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const isFormValid = handleValidation();
@@ -123,6 +144,7 @@ const PlantForm = ({ closeModal }) => {
       return;
     } else {
       console.log("Form was submitted successfully", formData);
+      storeToFirebase(formData);
       closeModal();
     }
   };
