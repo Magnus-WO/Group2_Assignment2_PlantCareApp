@@ -1,22 +1,39 @@
 .plantCardContainer {
   width: 250px;
-  height: 250px;
+  height: auto;
+  max-height: 400px;
+}
+.plantCardContainer:hover {
+  background-color: lightgray;
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+.plantCardContainer .plantCard {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--text-color);
-  border-radius: var(--border-radius-small);
+  border-right: 1px solid var(--border-color);
+  border-left: 1px solid var(--border-color);
+  padding: var(--spacing-small) var(--spacing-medium);
+  gap: var(--spacing-medium);
 }
 
-.plantCardContainer .plantImageContainer {
-  width: 100%;
+.plantCardContainer .plantCard .plantImageContainer {
+  max-width: 250px;
+  max-height: 250px;
   flex-grow: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-small);
 }
 
-.plantCardContainer .plantName{
-    width: 100%;
-    text-align: center;
+.plantImageContainer .plantImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.plantCardContainer .plantName {
+  width: 100%;
 }

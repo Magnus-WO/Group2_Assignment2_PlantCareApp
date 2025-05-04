@@ -11,7 +11,7 @@ import PlantCard from "../PlantCard/PlantCard.jsx";
 import PlantItem from "../PlantItem/PlantItem";
 import styles from "./PlantList.module.css";
 
-const PlantList = () => {
+const PlantList = ({ onPlantClick }) => {
   // Fetching data from database
   const [dataFromDatabase, setDataFromDatabase] = useState([]);
 
@@ -25,6 +25,7 @@ const PlantList = () => {
         ...guidence.data(),
       }));
       setDataFromDatabase(plantData);
+      console.log(plantData);
     } catch (error) {
       console.log(error.message);
     }
@@ -32,7 +33,7 @@ const PlantList = () => {
   // UseEffect
   useEffect(() => {
     fetchFromDatabase();
-  });
+  }, []);
   return (
     <ul className={styles.plantsList}>
       {dataFromDatabase &&
@@ -51,9 +52,10 @@ const PlantList = () => {
             //   image={plant.imageUrl}
             // />
             <PlantCard
+              key={plant.id}
               plantImage={plant.imageUrl}
               plantName={plant.plantName}
-              // onClick={() => openModal(plant)}
+              onClick={() => onPlantClick(plant)}
             />
           );
         })}
