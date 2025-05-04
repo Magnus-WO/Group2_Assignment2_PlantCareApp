@@ -1,0 +1,22 @@
+.plantCardContainer {
+  width: 250px;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--text-color);
+  border-radius: var(--border-radius-small);
+}
+
+.plantCardContainer .plantImageContainer {
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-small);
+}
+
+.plantCardContainer .plantName{
+    width: 100%;
+    text-align: center;
+}
