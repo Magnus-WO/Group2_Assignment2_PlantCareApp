@@ -20,6 +20,7 @@ button {
   --hover-color: #6c757d;
   --button-text-color: #efeff0;
   --error-color: #ff0000;
+  --border-color: lightgray;
 
   /* Spacing */
   --spacing-small: 0.5rem;

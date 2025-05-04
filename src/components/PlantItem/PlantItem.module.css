@@ -1,0 +1,106 @@
+.plantContainer {
+  width: 100%;
+  height: 100%;
+  max-height: 450px;
+  background-color: var(--secondary-background-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-large);
+  border-radius: var(--border-radius-medium);
+  position: relative;
+}
+.plantContainer .plantTitleContainer {
+  width: 50%;
+  height: 100%;
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-right: var(--spacing-large);
+}
+.plantTitleContainer .plantImageContainer {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+.plantImageContainer .plantImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.plantTitleContainer .plantTitle {
+  padding: var(--spacing-medium) 0;
+  text-align: center;
+}
+
+.plantContainer .plantDetailsContainer {
+  width: 50%;
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  gap: var(--spacing-small);
+  padding-left: var(--spacing-large);
+  border-left: 1px solid var(--border-color);
+  overflow-y: auto;
+}
+.closeModalButton {
+  position: absolute;
+  background-color: var(--secondary-background-color);
+  top: 12px;
+  right: 12px;
+  border: none;
+}
+.closeModalButton .closeButtonIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--border-color);
+  transition: 0.2s ease;
+}
+.closeModalButton:hover .closeButtonIcon {
+  color: var(--hover-color);
+  transition: 0.2s ease;
+}
+
+@media screen and (max-width: 768px) {
+  .plantContainer {
+    width: 100%;
+    min-height: 100%;
+    padding: var(--spacing-large) var(--spacing-medium);
+  }
+  .plantContainer .plantTitleContainer {
+    padding-right: 0;
+    padding: 0 var(--spacing-medium);
+    width: 80%;
+    height: 50%;
+    max-height: 200px;
+  }
+  .plantContainer .plantDetailsContainer {
+    width: 50%;
+    max-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+  }
+}
+@media screen and (max-width: 450px) {
+  .plantContainer {
+    width: 100%;
+    min-height: 100%;
+    flex-direction: column;
+    padding: var(--spacing-large) var(--spacing-medium);
+  }
+  .plantContainer .plantDetailsContainer {
+    width: 100%;
+    padding-left: 0;
+    padding: var(--spacing-medium);
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+  }
+}

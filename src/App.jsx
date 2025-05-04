@@ -3,41 +3,46 @@ import styles from "./App.module.css";
 import Button from "./components/Button/Button";
 import Modal from "./components/Modal/Modal";
 import PlantForm from "./components/PlantForm/PlantForm";
+import PlantItem from "./components/PlantItem/PlantItem";
 import PlantList from "./components/PlantList/PlantList";
 
 function App() {
   // State variables
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPlant, setSelectedPlant] = useState(null);
 
-  const openModal = () => setIsModalOpen(true);
-
-  const closeModal = () => {
+  const openFormModal = () => setIsModalOpen(true);
+  const closeFormModal = () => {
     setIsModalOpen(false);
-    // setEditingExpense(null); // Reset the editing state
   };
+  const openPlantModal = (plant) => setSelectedPlant(plant);
+  const closePlantModal = () => setSelectedPlant(null);
 
   return (
     <div className={styles.rootContainer}>
-      <div className={styles.heroContainer}>
-        <header>
-          <h1 className={styles.title}>Plant Care</h1>
-          <Button
-            className={styles.openModalButton}
-            onClick={openModal}
-            ariaLabel="Open add plant form"
-          >
-            Add plant
-          </Button>
-          {isModalOpen && (
-            <Modal isOpen={isModalOpen} closeModal={closeModal}>
-              <PlantForm closeModal={closeModal} />
-            </Modal>
-          )}
-        </header>
-        <main>
-          <PlantList></PlantList>
-        </main>
-      </div>
+      <header>
+        <h1 className={styles.title}>Plant Care</h1>
+        <Button
+          className={styles.openModalButton}
+          onClick={openFormModal}
+          ariaLabel="Open add plant form"
+        >
+          Add plant
+        </Button>
+        {isModalOpen && (
+          <Modal isOpen={isModalOpen} closeModal={closeFormModal}>
+            <PlantForm closeModal={closeFormModal} />
+          </Modal>
+        )}
+      </header>
+      <main>
+        <PlantList onPlantClick={openPlantModal}></PlantList>
+      </main>
+      {selectedPlant && (
+        <Modal isOpen={true} closeModal={closePlantModal}>
+          <PlantItem {...selectedPlant} closeModal={closePlantModal} />
+        </Modal>
+      )}
     </div>
   );
 }

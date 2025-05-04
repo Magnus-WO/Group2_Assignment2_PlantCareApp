@@ -1,7 +1,7 @@
 .button {
   background-color: var(--button-color);
   color: var(--button-text-color);
-  border-radius: var(--border-radius-medium);
+  border-radius: var(--border-radius-small);
   border: none;
   padding: var(--spacing-small) var(--spacing-medium);
 }
