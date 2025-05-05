@@ -4,6 +4,7 @@ import { database } from "../../firebaseConfig";
 // CSS import
 import styles from "./PlantForm.module.css";
 // Component imports
+import { cloudinaryConfig } from "../../cloudinaryConfig";
 import Button from "../Button/Button";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
@@ -23,7 +24,6 @@ const PlantForm = ({ closeModal }) => {
   });
 
   const [errorMessages, setErrorMessages] = useState({});
-  const [message, setMessage] = useState("");
   const [isValid, setIsValid] = useState(false);
 
   // Ref variable
@@ -102,16 +102,6 @@ const PlantForm = ({ closeModal }) => {
       errors.humidity = "";
     }
 
-    // if (!plantDetails.imageUrl.trim()) {
-    //   errors.imageUrl = "Image URL is required!";
-    //   isFormValid = false;
-    // } else if (!/\b(jpg|jpeg|png|gif|webp)\b/i.test(plantDetails.imageUrl)) {
-    //   errors.imageUrl =
-    //     "Image URL must contain a supported image format (jpg, jpeg, png, gif, webp)!";
-    //   isFormValid = false;
-    // } else {
-    //   errors.imageUrl = "";
-    // }
     if (!plantDetails.image) {
       errors.image = "Image is required!";
       isFormValid = false;
@@ -149,7 +139,7 @@ const PlantForm = ({ closeModal }) => {
     } else {
       setErrorMessages((prevErrors) => ({
         ...prevErrors,
-        image: "Please select a valid image file!",
+        image: "Please select a valid image file (jpg, jpeg, png, webp)!",
       }));
     }
   };
@@ -169,12 +159,12 @@ const PlantForm = ({ closeModal }) => {
   const uploadImage = async (image) => {
     const formData = new FormData();
     formData.append("file", plantDetails.image);
-    formData.append("upload_preset", "upload_preset");
-    formData.append("cloud_name", "diipbt2z6");
+    formData.append("upload_preset", cloudinaryConfig.upload_preset); // Using .env variable
+    formData.append("cloud_name", cloudinaryConfig.cloud_name);
 
     try {
       const response = await fetch(
-        "https://api.cloudinary.com/v1_1/diipbt2z6/upload",
+        `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloud_name}/upload`,
         {
           method: "POST",
           body: formData,
@@ -189,7 +179,6 @@ const PlantForm = ({ closeModal }) => {
         previewUrl: data.secure_url,
       }));
 
-      setMessage("Image uploaded successfully!");
       return data.secure_url;
     } catch (error) {
       console.error("Cloudinary upload error:", error.message);
@@ -214,7 +203,7 @@ const PlantForm = ({ closeModal }) => {
       return;
     } else {
       try {
-        const imageUrl = await uploadImage();
+        const imageUrl = await uploadImage(plantDetails.image);
         const plantData = {
           ...plantDetails,
           image: imageUrl,
@@ -226,7 +215,6 @@ const PlantForm = ({ closeModal }) => {
         closeModal();
       } catch (error) {
         console.error("Error submitting form:", error);
-        setMessage("Form submission failed!");
       }
     }
   };
@@ -365,25 +353,13 @@ const PlantForm = ({ closeModal }) => {
           {errorMessages && <ErrorMessage message={errorMessages.humidity} />}
         </div>
 
-        {/* <div className={styles.formGroup}>
-          <label htmlFor="imageUrl">Image URL</label>
-          <input
-            type="text"
-            name="imageUrl"
-            id="imageUrl"
-            value={plantDetails.imageUrl}
-            onChange={handleChange}
-            placeholder="https://example.com/plant.jpg"
-          />
-          {errorMessages && <ErrorMessage message={errorMessages.imageUrl} />}
-        </div> */}
         <div className={styles.formGroup}>
           <label htmlFor="image">Upload Image</label>
           <input
             type="file"
             name="image"
             id="image"
-            accept=".jpg, .jpeg, .png"
+            accept=".jpg, .jpeg, .png, .webp"
             onChange={handleImageChange}
             ref={fileInputRef}
             className={styles.imageInput}
@@ -406,7 +382,6 @@ const PlantForm = ({ closeModal }) => {
           )}
           {errorMessages && <ErrorMessage message={errorMessages.image} />}
         </div>
-        {message && <ErrorMessage message={message} />}
         <div className={styles.buttonContainer}>
           <Button type="submit" className={styles.formButton}>
             Add Plant
