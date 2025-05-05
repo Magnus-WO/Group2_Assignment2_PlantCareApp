@@ -12,6 +12,7 @@ const PlantItem = ({
   temperatureMin,
   temperatureMax,
   humidity,
+  image,
   imageUrl,
   closeModal,
 }) => {
@@ -26,7 +27,7 @@ const PlantItem = ({
       <div className={plantStyles.plantTitleContainer}>
         <div className={plantStyles.plantImageContainer}>
           <img
-            src={imageUrl}
+            src={image || imageUrl}
             alt={`Image of ${plantName}`}
             className={plantStyles.plantImage}
           />
