@@ -25,3 +25,5 @@ dist-ssr
 
 firebaseConfig.js
 .env
+cloudinaryConfig.js
+

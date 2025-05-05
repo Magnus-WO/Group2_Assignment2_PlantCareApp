@@ -1,9 +1,12 @@
 import { addDoc, collection } from "firebase/firestore";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { database } from "../../firebaseConfig";
+// CSS import
+import styles from "./PlantForm.module.css";
+// Component imports
+import { cloudinaryConfig } from "../../cloudinaryConfig";
 import Button from "../Button/Button";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
-import styles from "./PlantForm.module.css";
 
 const PlantForm = ({ closeModal }) => {
   const [plantDetails, setPlantDetails] = useState({
@@ -16,11 +19,15 @@ const PlantForm = ({ closeModal }) => {
     temperatureMin: "",
     temperatureMax: "",
     humidity: "",
-    imageUrl: "",
+    image: null,
+    previewUrl: null,
   });
 
   const [errorMessages, setErrorMessages] = useState({});
   const [isValid, setIsValid] = useState(false);
+
+  // Ref variable
+  const fileInputRef = useRef(null);
 
   const handleValidation = () => {
     const errors = { ...errorMessages };
@@ -95,15 +102,11 @@ const PlantForm = ({ closeModal }) => {
       errors.humidity = "";
     }
 
-    if (!plantDetails.imageUrl.trim()) {
-      errors.imageUrl = "Image URL is required!";
-      isFormValid = false;
-    } else if (!/\b(jpg|jpeg|png|gif|webp)\b/i.test(plantDetails.imageUrl)) {
-      errors.imageUrl =
-        "Image URL must contain a supported image format (jpg, jpeg, png, gif, webp)!";
+    if (!plantDetails.image) {
+      errors.image = "Image is required!";
       isFormValid = false;
     } else {
-      errors.imageUrl = "";
+      errors.image = "";
     }
 
     setErrorMessages(errors);
@@ -120,6 +123,69 @@ const PlantForm = ({ closeModal }) => {
     setErrorMessages((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      const previewUrl = URL.createObjectURL(file);
+      setPlantDetails((prevDetails) => ({
+        ...prevDetails,
+        image: file,
+        previewUrl,
+      }));
+      setErrorMessages((prevErrors) => ({
+        ...prevErrors,
+        image: "",
+      }));
+    } else {
+      setErrorMessages((prevErrors) => ({
+        ...prevErrors,
+        image: "Please select a valid image file (jpg, jpeg, png, webp)!",
+      }));
+    }
+  };
+
+  // Remove the image preview
+  const handleRemoveImage = () => {
+    setPlantDetails((prevDetails) => ({
+      ...prevDetails,
+      image: null,
+      previewUrl: null,
+    }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const uploadImage = async (image) => {
+    const formData = new FormData();
+    formData.append("file", plantDetails.image);
+    formData.append("upload_preset", cloudinaryConfig.upload_preset); // Using .env variable
+    formData.append("cloud_name", cloudinaryConfig.cloud_name);
+
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloud_name}/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      ); //Should be hidden for API key purposes
+      const data = await response.json();
+      console.log("Image URL", data.secure_url);
+      console.log("Public ID", data.public_id);
+
+      setPlantDetails((prevDetails) => ({
+        ...prevDetails,
+        previewUrl: data.secure_url,
+      }));
+
+      return data.secure_url;
+    } catch (error) {
+      console.error("Cloudinary upload error:", error.message);
+      return null;
+    }
+  };
+
   const storeToFirebase = async (data) => {
     try {
       const docRef = await addDoc(collection(database, "plantGuidences"), data);
@@ -129,16 +195,27 @@ const PlantForm = ({ closeModal }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const isFormValid = handleValidation();
     if (!isFormValid) {
       console.log("Form was not submitted");
       return;
     } else {
-      console.log("Form was submitted successfully", plantDetails);
-      storeToFirebase(plantDetails);
-      closeModal();
+      try {
+        const imageUrl = await uploadImage(plantDetails.image);
+        const plantData = {
+          ...plantDetails,
+          image: imageUrl,
+        };
+        console.log("Plant details:", plantData);
+        await storeToFirebase(plantData);
+        console.log("Form was submitted successfully", plantDetails);
+
+        closeModal();
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
     }
   };
 
@@ -277,18 +354,34 @@ const PlantForm = ({ closeModal }) => {
         </div>
 
         <div className={styles.formGroup}>
-          <label htmlFor="imageUrl">Image URL</label>
+          <label htmlFor="image">Upload Image</label>
           <input
-            type="text"
-            name="imageUrl"
-            id="imageUrl"
-            value={plantDetails.imageUrl}
-            onChange={handleChange}
-            placeholder="https://example.com/plant.jpg"
+            type="file"
+            name="image"
+            id="image"
+            accept=".jpg, .jpeg, .png, .webp"
+            onChange={handleImageChange}
+            ref={fileInputRef}
+            className={styles.imageInput}
           />
-          {errorMessages && <ErrorMessage message={errorMessages.imageUrl} />}
+          {plantDetails.previewUrl && (
+            <div className={styles.imagePreviewContainer}>
+              <img
+                src={plantDetails.previewUrl}
+                alt="Preview"
+                className={styles.imagePreview}
+              />
+              <button
+                type="button"
+                className={styles.removeImageButton}
+                onClick={handleRemoveImage}
+              >
+                Remove Image
+              </button>
+            </div>
+          )}
+          {errorMessages && <ErrorMessage message={errorMessages.image} />}
         </div>
-
         <div className={styles.buttonContainer}>
           <Button type="submit" className={styles.formButton}>
             Add Plant
