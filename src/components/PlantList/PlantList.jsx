@@ -1,10 +1,10 @@
-import { collection, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { database } from "../../firebaseConfig.js";
-import PlantCard from "../PlantCard/PlantCard.jsx";
+import { collection, onSnapshot } from "firebase/firestore";
+import { database } from "../../firebaseConfig";
+import PlantCard from "../PlantCard/PlantCard";
 import styles from "./PlantList.module.css";
 
-const PlantList = ({ onPlantClick }) => {
+const PlantList = ({ onPlantClick, searchTerm, toxicityFilter }) => {
   const [dataFromDatabase, setDataFromDatabase] = useState([]);
 
   useEffect(() => {
@@ -18,17 +18,26 @@ const PlantList = ({ onPlantClick }) => {
         setDataFromDatabase(plantData);
       },
       (error) => {
-        console.error("Error fetching data: ", error);
+        console.error("❌ Firestore error:", error.message);
       }
     );
 
-    // Cleanup listener on unmount
     return () => unsubscribe();
   }, []);
 
+  const filteredPlants = dataFromDatabase.filter((plant) => {
+    const matchesSearch = plant.plantName
+      ?.toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesToxicity =
+      !toxicityFilter ||
+      plant.toxicity?.toLowerCase() === toxicityFilter.toLowerCase();
+    return matchesSearch && matchesToxicity;
+  });
+
   return (
     <ul className={styles.plantsList}>
-      {dataFromDatabase.map((plant) => (
+      {filteredPlants.map((plant) => (
         <PlantCard
           key={plant.id}
           plantImage={plant.imageUrl || plant.image}
