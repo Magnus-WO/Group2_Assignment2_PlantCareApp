@@ -5,16 +5,16 @@ import Modal from "./components/Modal/Modal";
 import PlantForm from "./components/PlantForm/PlantForm";
 import PlantItem from "./components/PlantItem/PlantItem";
 import PlantList from "./components/PlantList/PlantList";
+import PlantFilter from "./components/PlantFilter/PlantFilter";
 
 function App() {
-  // State variables
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPlant, setSelectedPlant] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [toxicityFilter, setToxicityFilter] = useState("");
 
   const openFormModal = () => setIsModalOpen(true);
-  const closeFormModal = () => {
-    setIsModalOpen(false);
-  };
+  const closeFormModal = () => setIsModalOpen(false);
   const openPlantModal = (plant) => setSelectedPlant(plant);
   const closePlantModal = () => setSelectedPlant(null);
 
@@ -35,9 +35,21 @@ function App() {
           </Modal>
         )}
       </header>
+
       <main>
-        <PlantList onPlantClick={openPlantModal}></PlantList>
+        <PlantFilter
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          toxicityFilter={toxicityFilter}
+          setToxicityFilter={setToxicityFilter}
+        />
+        <PlantList
+          onPlantClick={openPlantModal}
+          searchTerm={searchTerm}
+          toxicityFilter={toxicityFilter}
+        />
       </main>
+
       {selectedPlant && (
         <Modal isOpen={true} closeModal={closePlantModal}>
           <PlantItem {...selectedPlant} closeModal={closePlantModal} />
